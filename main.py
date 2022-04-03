@@ -41,13 +41,13 @@ st.write(
     """,
     unsafe_allow_html=True,
 )
-m1.metric(label =':money_with_wings:Montant total',value = str(round(df_film["montant"].sum()/1000000,2)) + ' M €',
+m1.metric(label =':money_with_wings: Montant total',value = str(round(df_film["montant"].sum()/1000000,2)) + ' M €',
           delta=str(round(((1 - (542000000 - df_film["montant"].sum()) / 542000000)) * 100, 2)) + ' % de entier',
           delta_color='normal')
-m2.metric(label =':heart:Nombre total des beneficiaires',value = str(df_film["beneficiaire"].nunique()),
+m2.metric(label =':heart: Nombre total des beneficiaires',value = str(df_film["beneficiaire"].nunique()),
           delta=str(round(((1 - (22000 - df_film["beneficiaire"].nunique()) / 22000)) * 100, 2)) + ' % de entier',
           delta_color='normal')
-m3.metric(label =':abacus: Nombre total des projets',value = str(df_film.shape[0]),
+m3.metric(label ='🧮 Nombre total des projets',value = str(df_film.shape[0]),
           delta=str(round(((1 - (53003- df_film.shape[0])/53003))*100, 2)) + ' % de entier',
               delta_color='normal')
 

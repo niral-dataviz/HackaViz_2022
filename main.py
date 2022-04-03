@@ -3,7 +3,10 @@ import plotly.express as pt
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
-st.set_page_config(page_title="Hackaiz-2022",page_icon="UA", layout="wide", initial_sidebar_state="expanded",
+from streamlit_lottie import st_lottie
+import requests
+
+st.set_page_config(page_title="Hackaiz-2022",page_icon="🇺🇦", layout="wide", initial_sidebar_state="expanded",
      menu_items={
          'About': "The app is created by [Kalairani](https://kalairani.github.io/) and [Murugesh](https://murugeshmanthiramoorthi.github.io/). This is a project created as a part of HackaViz2022 organised by Toulouse Data Viz."
      })
@@ -18,7 +21,7 @@ with st.sidebar:
 
 ## extract only film
 df_filter=df[df['oeuvre']==selected_ouevre]
-bar_chart=df_filter.groupby(by=["collecteur","annee"]).sum().sort_values(by="montant", ascending=False).reset_index()
+bar_chart=df_filter.groupby(by=["collecteur","aide","annee"]).sum().sort_values(by="montant", ascending=False).reset_index()
 bar_chart["annee"]=bar_chart["annee"].round(0).astype('object')
 
 
@@ -56,35 +59,55 @@ m3.metric(label ='🧮 Nombre total des projets',value = str(df_filter.shape[0])
 a_covid = df_filter[df_filter["annee"]==2020]["montant"].mean()
 b_covid = df_filter[df_filter["annee"]<2020]["montant"].mean()
 
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+
+
+lottie_url_up = "https://assets10.lottiefiles.com/packages/lf20_4dl0zamm.json"
+lottie_json_up = load_lottieurl(lottie_url_up)
+
+lottie_url_down = "https://assets10.lottiefiles.com/packages/lf20_pmtefjhf.json"
+lottie_json_down = load_lottieurl(lottie_url_down)
 if a_covid > b_covid:
     new_col1, new_col2 = st.columns([1,1])
-    new_col1.image('https://cdn.pixabay.com/photo/2016/11/21/13/58/ball-1845546_960_720.jpg')
+    with new_col1:
+        st_lottie(lottie_json_up, height=300)
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.markdown("""Le montant moyen a <span style="color: #ff0000">augmenté</span> pour l'oeuvre <span style="color: #ff0000">""" + selected_ouevre + """"</span> après la Covid-19""",unsafe_allow_html=True)
+    new_col2.markdown("""
+    <style>
+    .big-font {
+        font-size:30px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    new_col2.markdown("""<p class="big-font">Le montant moyen a <span style="color: #ff0000">augmenté</span> pour l'oeuvre <span style="color: #ff0000">""" + selected_ouevre + """</span> après la Covid-19 </p>""", unsafe_allow_html=True)
 else:
     new_col1, new_col2 = st.columns([1, 1])
-    new_col1.image('https://cdn.pixabay.com/photo/2018/03/27/17/25/cat-3266673_960_720.jpg')
+    with new_col1:
+        st_lottie(lottie_json_down, height=300)
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
     new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.text("")
-    new_col2.markdown("""Le montant moyen a <span style="color: #ff0000">diminué</span> pour l'oeuvre <span style="color: #ff0000">"""+ selected_ouevre + """</span> après la Covid-19""", unsafe_allow_html=True)
+    new_col2.markdown("""
+    <style>
+    .big-font {
+        font-size:30px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
+    new_col2.markdown("""<p class="big-font">Le montant moyen a <span style="color: #ff0000">diminué</span> pour l'oeuvre <span style="color: #ff0000">""" + selected_ouevre + """</span> après la Covid-19 </p>""", unsafe_allow_html=True)
 df_matrix=pd.crosstab(df_filter['aide'], df_filter['annee'],values=df_filter['montant'],aggfunc=sum).fillna(0)
 label=list(df_matrix.index) + list(df_matrix.columns)
 source=[]
@@ -113,12 +136,12 @@ col1, col2 = st.columns ([4,4])
 ## bar chart
 
 fig = pt.bar(bar_chart, x='collecteur', y='montant',
-             hover_data=['annee'], color='annee',
-             labels={'collecteur':'Collecteur', 'annee':'Annee', 'montant': 'Montant'},
+             hover_data=['aide'], color='aide',
+             labels={'collecteur':'Collecteur', 'aide':'Aide', 'montant': 'Montant', 'annee':'Année'}, animation_frame="annee",
              color_discrete_sequence=["#DAF7A6","#FFC300", "#BF7A31","#FF5733","#C70039"]
 )
 fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)'
+    plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 2000}
 )
 
 col1.subheader("Le montant distribué par collecteur")
@@ -128,7 +151,7 @@ col1.plotly_chart(fig, use_container_width=True)
 
 
 fig_2=pt.scatter(df_filter, x="montant", y="aide", animation_frame="annee",color="collecteur",size="montant"
-                 ,labels={'collecteur':'Collecteur', 'annee':'Annee', 'montant': 'Montant','aide':'Aide'})
+                 ,labels={'collecteur':'Collecteur', 'annee':'Année', 'montant': 'Montant','aide':'Aide'})
 
 fig_2.update_layout(paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',transition = {'duration': 2000}

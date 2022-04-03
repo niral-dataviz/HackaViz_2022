@@ -89,7 +89,7 @@ if a_covid > b_covid:
     </style>
     """, unsafe_allow_html=True)
 
-    new_col2.markdown("""<p class="big-font">Le montant moyen a <span style="color: #ff0000">augmenté</span> pour l'oeuvre <span style="color: #ff0000">""" + selected_ouevre + """</span> après la Covid-19 </p>""", unsafe_allow_html=True)
+    new_col2.markdown("""<p class="big-font">Le montant moyen a <span style="color: #0ed145">augmenté</span> pour l'oeuvre <span style="color: #0ed145">""" + selected_ouevre + """</span> après la Covid-19 </p>""", unsafe_allow_html=True)
 else:
     new_col1, new_col2 = st.columns([1, 1])
     with new_col1:

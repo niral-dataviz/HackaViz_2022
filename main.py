@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as pt
 import streamlit as st
-st.set_page_config(page_title="Hackaiz-2022",page_icon=":flag-ua:", layout="wide", initial_sidebar_state="expanded",
+st.set_page_config(page_title="Hackaiz-2022",page_icon="UA", layout="wide", initial_sidebar_state="expanded",
      menu_items={
          'About': "The app is created by [Kalairani](https://kalairani.github.io/) and [Murugesh](https://murugeshmanthiramoorthi.github.io/). This is a project created as a part of HackaViz2022 organised by Toulouse Data Viz."
      })
@@ -11,7 +11,7 @@ df=pd.read_csv("actions_culturelles_soutenues.csv")
 #Filter
 with st.sidebar:
     selected_ouevre=st.radio("Chosir l'oeuvre ici: ", list(df["oeuvre"].unique()))
-    # st.snow()
+    st.snow()
 
 
 ## extract only film
@@ -41,10 +41,10 @@ st.write(
     """,
     unsafe_allow_html=True,
 )
-m1.metric(label =':money_with_wings: Montant total',value = str(round(df_film["montant"].sum()/1000000,2)) + ' M €',
+m1.metric(label ='💸 Montant total',value = str(round(df_film["montant"].sum()/1000000,2)) + ' M €',
           delta=str(round(((1 - (542000000 - df_film["montant"].sum()) / 542000000)) * 100, 2)) + ' % de entier',
           delta_color='normal')
-m2.metric(label =':heart: Nombre total des beneficiaires',value = str(df_film["beneficiaire"].nunique()),
+m2.metric(label ='❤️ Nombre total des beneficiaires',value = str(df_film["beneficiaire"].nunique()),
           delta=str(round(((1 - (22000 - df_film["beneficiaire"].nunique()) / 22000)) * 100, 2)) + ' % de entier',
           delta_color='normal')
 m3.metric(label ='🧮 Nombre total des projets',value = str(df_film.shape[0]),
